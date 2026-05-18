@@ -114,7 +114,7 @@ with tab1:
                     classify_progress = st.progress(0, text="Classifying transactions...")
                     for j, (_, row) in enumerate(df.iterrows()):
                         response = requests.post(
-                            "http://localhost:8000/api/classify",
+                            "https://hybrid-llm-bank-parser.onrender.com/api/classify",
                             json={"description": row["description"]}
                         )
                         result_dict = response.json()
