@@ -9,7 +9,7 @@ except ModuleNotFoundError:
     from classifier import get_classifier
 from pathlib import Path
 
-env_path = Path(__file__).parent / ".env"
+env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
 app = FastAPI(title = "Bank Parser API", version = "1.0")

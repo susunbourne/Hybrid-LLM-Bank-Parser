@@ -13,10 +13,11 @@ import tempfile
 import requests
 
 from dotenv import load_dotenv
-load_dotenv()
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(env_path)
 
 from bank_parser import get_bank_config, StatementProcessor
-from classifier import TransactionClassifier, DeepSeekBackend, ClassificationResult
+from classifier import ClassificationResult
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -86,7 +87,6 @@ with tab1:
         else:
             try:
                 config, _, output_path = get_bank_config(bank_choice)
-                classifier = st.session_state.classifier
 
                 all_dfs = []
                 all_results = []
