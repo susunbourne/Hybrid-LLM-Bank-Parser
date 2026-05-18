@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(env_path)
 
-from bank_parser import get_bank_config, StatementProcessor
+
 from classifier import ClassificationResult
 
 # ── Page config ───────────────────────────────────────────────────────────────
