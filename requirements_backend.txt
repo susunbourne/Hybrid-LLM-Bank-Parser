@@ -1,0 +1,11 @@
+pandas
+mysql-connector-python
+google-genai
+openai
+python-dotenv
+pdftotext
+streamlit
+plotly
+fastapi
+uvicorn
+requests

@@ -28,16 +28,6 @@ class ClassifyResponse(BaseModel):
 
 classifier = get_classifier()
 
-
-@app.get("/")
-def root():
-    return {"status": "ok", "service": "Bank Parser API"}
-
-
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
-
 @app.post("/api/classify")
 def classify_transaction(request: ClassifyRequest) -> ClassifyResponse:
     result = classifier.classify(request.description)

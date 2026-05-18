@@ -10,8 +10,8 @@ RUN apt-get update \
 		libpoppler-cpp-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements_backend.txt .
+RUN pip install --no-cache-dir -r requirements_backend.txt
 
 RUN pip install --no-cache-dir pdftotext
 
