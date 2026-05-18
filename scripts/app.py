@@ -10,6 +10,7 @@ from pathlib import Path
 from collections import Counter
 import os
 import tempfile
+import requests
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -39,13 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ── Initialize classifier once ────────────────────────────────────────────────
-if "classifier" not in st.session_state:
-    st.session_state.classifier = TransactionClassifier(
-        backend=DeepSeekBackend(
-            api_key=os.getenv("DEEPSEEK_API_KEY"),
-            model="deepseek-chat"
-        )
-    )
+
 
 if "df" not in st.session_state:
     st.session_state.df = None
@@ -118,7 +113,18 @@ with tab1:
                     results: list[ClassificationResult] = []
                     classify_progress = st.progress(0, text="Classifying transactions...")
                     for j, (_, row) in enumerate(df.iterrows()):
-                        result = classifier.classify(row["description"])
+                        response = requests.post(
+                            "http://localhost:8000/api/classify",
+                            json={"description": row["description"]}
+                        )
+                        result_dict = response.json()
+                        
+                        # convert to ClassificationResult object
+                        result = ClassificationResult(
+                            category_main=result_dict["category_main"],
+                            category_sub=result_dict.get("category_sub"),
+                            classification_method=result_dict.get("classification_method")
+                        )
                         results.append(result)
                         classify_progress.progress(
                             (j + 1) / len(df),
