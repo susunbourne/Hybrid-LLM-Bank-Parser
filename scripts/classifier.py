@@ -171,6 +171,7 @@ class TransactionClassifier:
         #self.examples: list[ClassificationExample] = []
         #self.examples_file = examples_file
         #self._load_examples()
+        self.cache = {}
 
     def _build_prompt(self, description: str) -> str:
         category_text = ", ".join(self.MAIN_CATEGORIES)
@@ -268,12 +269,16 @@ Output valid JSON only:
 
 
     def classify(self, description: str) -> ClassificationResult:
+        if description in self.cache:
+            return self.cache[description]
         if not description:
-            return ClassificationResult(
+            result = ClassificationResult(
                 description = description,
                 category_main = "Empty",
                 classification_method = "none"
             )
+            self.cache[description] = result
+            return result
         if self.backend:
             try:
 
@@ -283,17 +288,33 @@ Output valid JSON only:
 
                 if parsed and parsed.category_main not in ["Nonsense", "Uncertain", "Empty"]:
                     parsed.classification_method = "LLM"
+                    self.cache[description] = parsed
                     return parsed
             except Exception as e:
                 logger.error(f"LLM classification failed: {e}")
         
         keyword_result = self._keyword_match(description)
-        if keyword_result:
-            return keyword_result
+        self.cache[description] = keyword_result
+        return keyword_result
+
         
         
 
 
+
+_classifier_instance = None
+
+def get_classifier() -> TransactionClassifier:
+    global _classifier_instance
+    if _classifier_instance is None:
+        _classifier_instance = TransactionClassifier(
+            backend = DeepSeekBackend(
+                api_key = os.getenv("DEEPSEEK_API_KEY"),
+                model = "deepseek-chat"
+            )
+        )
+
+    return _classifier_instance
 
 
 

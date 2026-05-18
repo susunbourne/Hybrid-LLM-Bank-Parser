@@ -6,3 +6,5 @@ python-dotenv
 #pdftotext
 streamlit 
 plotly
+fastapi
+uvicorn
