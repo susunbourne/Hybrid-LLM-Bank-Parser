@@ -86,7 +86,7 @@ with tab1:
             st.error("Please upload at least one PDF file.")
         else:
             try:
-                config, _, _ = get_bank_config(bank_choice)
+                config = get_bank_config(bank_choice)
 
                 all_dfs = []
                 all_results = []
@@ -177,7 +177,7 @@ with tab1:
                     st.markdown("### Preview")
                     st.dataframe(combined.head(20), use_container_width=True, hide_index=True)
 
-                    #csv = combined.to_csv(index=False)
+                    csv = combined.to_csv(index=False)
                     st.download_button(
                         "⬇️ Download CSV",
                         data=csv,

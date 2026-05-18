@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from functools import cached_property
 import re
 import pandas as pd
-import pdftotext
 import os
 from pathlib import Path
 
@@ -54,6 +53,7 @@ class PdfParser:
 
     @cached_property
     def pdf(self) -> list[str]:
+        import pdftotext
         with open(self.file_path, "rb") as f:
             pdf = pdftotext.PDF(f, physical = True)
         return pdf
@@ -108,8 +108,6 @@ class StatementProcessor(PdfParser):
         return df
 
 def find_pdf_files(directory_path: Path) -> list[Path]:
-    if directory_path is None:
-        raise ValueError("directory_path cannot be None")
     input_path = Path(directory_path)
     pdf_files = list(input_path.glob("*.pdf"))
 
@@ -117,12 +115,8 @@ def find_pdf_files(directory_path: Path) -> list[Path]:
 
 def get_bank_config(bank_name: str) -> BankConfig:
     if bank_name.lower() == "bank of america":
-        input_path = os.getenv("BANK_INPUT_PATH") or "./input/statements"
-        output_path = Path(os.getenv("OUTPUT_PATH") or "./output") / "bank_parser_output.csv"
-        return bank_of_america_config, input_path, output_path
+        return bank_of_america_config
     elif bank_name.lower() == "bank of america credit card":
-        input_path = os.getenv("CREDIT_CARD_STATEMENT_PATH") or "./input/Credit_card_statements"
-        output_path = Path(os.getenv("OUTPUT_PATH") or "./output") / "bank_parser_cc_output.csv"
-        return bank_of_america_cc_config, input_path, output_path
+        return bank_of_america_cc_config
     else:
         raise ValueError(f"Unsupported bank name: {bank_name}")

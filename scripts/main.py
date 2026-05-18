@@ -19,9 +19,13 @@ def main() -> None:
     choice = input("Enter the number corresponding to your choice: ")
 
     if choice == "1":
-        config_to_use, directory_path, output_path = get_bank_config("Bank of America")
+        config_to_use = get_bank_config("Bank of America")
+        directory_path = os.getenv("BANK_INPUT_PATH", "./input/statements")
+        output_path = Path(os.getenv("OUTPUT_PATH", "./output")) / "bank_parser_output.csv"
     elif choice == "2":
-        config_to_use, directory_path, output_path = get_bank_config("Bank of America Credit Card")
+        config_to_use = get_bank_config("Bank of America Credit Card")
+        directory_path = os.getenv("CREDIT_CARD_STATEMENT_PATH", "./input/Credit_card_statements")
+        output_path = Path(os.getenv("OUTPUT_PATH", "./output")) / "bank_parser_cc_output.csv"
     else:
         raise ValueError("Invalid choice. Please enter 1 or 2.")
 
